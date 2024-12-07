@@ -55,7 +55,7 @@ export default {
     demo: {
       validation: {
         form: {
-          startDate: "Date de début",
+          startDate: "Start Date",
           textField: "Champ texte",
           siret: "Siret",
           nestedDemoEntityName: "Nom de l'entité imbriquée",

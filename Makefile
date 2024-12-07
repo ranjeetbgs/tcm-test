@@ -70,7 +70,8 @@ down: sync-env ## down docker compose
 	docker compose down
 
 .PHONY: up
-up: sync-env ## up docker compose
+up: ## up docker compose
+	echo "make up"
 	DOCKER_BUILDKIT=1 docker compose up -d
 	docker compose logs initback back front -f
 
