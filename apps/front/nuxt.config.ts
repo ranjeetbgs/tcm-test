@@ -52,6 +52,12 @@ export default defineNuxtConfig({
       },
     },
   },
+  watchers: {
+    webpack: {
+    aggregateTimeout:300,
+    poll: 1000
+    }
+    },
   watch: [
     "src/assets/styles/_functions.scss",
     "src/assets/styles/_variables.scss",

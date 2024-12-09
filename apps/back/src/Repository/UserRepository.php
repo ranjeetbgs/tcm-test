@@ -26,11 +26,11 @@ class UserRepository extends ServiceEntityRepository
 
     public function createUser(CreateUserDto $userDto): User
     {
-        return new User((string) Uuid::uuid4(), $userDto->getEmail(), ['ROLE_USER']);
+        return new User( $userDto->getEmail(), ['ROLE_USER']);
     }
 
     public function createAdmin(CreateUserDto $userDto): User
     {
-        return new User((string) Uuid::uuid4(), $userDto->getEmail(), ['ROLE_ADMIN']);
+        return new User( $userDto->getEmail(), ['ROLE_ADMIN']);
     }
 }

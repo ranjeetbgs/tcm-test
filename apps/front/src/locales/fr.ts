@@ -43,6 +43,7 @@ export default {
       },
       menu: {
         appMenu: {
+          home: "Home",
           users: "Utilisateurs",
           page1: "page1",
           page2: "page2",

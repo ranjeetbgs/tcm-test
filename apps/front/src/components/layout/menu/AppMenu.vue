@@ -31,6 +31,11 @@ const authStore = useAuthUser();
 const { $appFetch } = useNuxtApp();
 const items = computed(() => [
   {
+    label: t("components.layout.menu.appMenu.home"),
+    icon: "pi pi-fw pi-home",
+    route: "/",
+  },
+  {
     label: t("components.layout.menu.appMenu.users"),
     icon: "pi pi-fw pi-file",
     route: "/users",

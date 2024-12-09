@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,22 +14,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUserInterface
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     #[ORM\Column(length: 180)]
     private string $password;
 
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'created_by')]
+    private Collection $transactions;
+
     /** @param array<string> $roles */
-    public function __construct(
-        #[ORM\Id]
-        #[ORM\Column(length: 36)]
-        private string $id,
-        #[ORM\Column(length: 180, unique: true)]
-        private string $email,
-        #[ORM\Column]
-        private array $roles = ['ROLE_USER'],
-    ) {
+    public function __construct( 
+    #[ORM\Column(length: 180, unique: true)]
+    private string $email, #[ORM\Column]
+    private array $roles = ['ROLE_USER'])
+    {
+        $this->transactions = new ArrayCollection();
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
@@ -126,5 +133,35 @@ class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUse
     public function hasRole(string $role): bool
     {
         return \in_array($role, $this->getRoles());
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCreatedBy() === $this) {
+                $transaction->setCreatedBy(null);
+            }
+        }
+
+        return $this;
     }
 }
