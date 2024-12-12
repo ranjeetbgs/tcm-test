@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Entity\Transaction;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +23,9 @@ class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUse
     #[ORM\Column(length: 180)]
     private string $password;
 
-    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'created_by')]
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'user',fetch:"EAGER")]
     private Collection $transactions;
+
 
     /** @param array<string> $roles */
     public function __construct( 
@@ -126,7 +128,7 @@ class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUse
         return [
             'id' => $this->getId(),
             'email' => $this->getEmail(),
-            'username' => $this->getUsername(),
+            'username' => $this->getUsername()
         ];
     }
 
@@ -147,7 +149,7 @@ class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUse
     {
         if (!$this->transactions->contains($transaction)) {
             $this->transactions->add($transaction);
-            $transaction->setCreatedBy($this);
+            $transaction->setUser($this);
         }
 
         return $this;
@@ -157,11 +159,13 @@ class User implements UserInterface, \JsonSerializable, PasswordAuthenticatedUse
     {
         if ($this->transactions->removeElement($transaction)) {
             // set the owning side to null (unless already changed)
-            if ($transaction->getCreatedBy() === $this) {
-                $transaction->setCreatedBy(null);
+            if ($transaction->getUser() === $this) {
+                $transaction->setUser(null);
             }
         }
 
         return $this;
     }
+
+
 }

@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
-class Transaction
+class Transaction implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,15 +20,15 @@ class Transaction
     #[ORM\Column]
     private ?float $amount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transactions')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?user $created_by = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\Column(length: 255)]
     private ?string $location = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -59,18 +59,6 @@ class Transaction
         return $this;
     }
 
-    public function getCreatedBy(): ?user
-    {
-        return $this->created_by;
-    }
-
-    public function setCreatedBy(?user $created_by): static
-    {
-        $this->created_by = $created_by;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -95,6 +83,18 @@ class Transaction
         return $this;
     }
 
+    public function jsonSerialize(): mixed
+    {
+        
+        return [
+            'id' => $this->getId(),
+            'payment_label' => $this->getPaymentLabel(),
+            'amount' => $this->getAmount(),
+            'location'=>$this->getLocation(),
+            'created_at'=>$this->getCreatedAt()
+        ];
+    }
+
     public function getLocations()
     {
         return array(
@@ -110,5 +110,17 @@ class Transaction
             "48.8821775,2.3166563"
 
         );
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

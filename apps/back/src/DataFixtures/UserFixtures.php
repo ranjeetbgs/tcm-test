@@ -21,30 +21,27 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = new User('admin@tcm.com');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'admin'));
-        $user->setRoles(['ROLE_ADMIN']);
-        $manager->persist($user);
+        $admin = new User('admin@tcm.com');
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
 
 
-        for ($i = 0; $i < 5; $i++) 
+        for ($j = 0; $j < 5; $j++) 
             {
                 $transaction = new Transaction();
                 $transaction->setAmount(rand(1000, 10000));
                 $transaction->setPaymentLabel(ByteString::fromRandom(8, implode('', range('A', 'Z')))->toString());
                 $transaction->setLocation($transaction->getLocations()[rand(0,9)]);
                 $transaction->setCreatedAt(new \DateTime());
-                $transaction->setCreatedBy($user);
+                $transaction->setUser($admin);
                 $manager->persist($transaction);
+                $admin->addTransaction($transaction);
             }
 
-        // create 10 users!
-        for ($i = 0; $i < 5; $i++) {
-            $unique_email = ByteString::fromRandom(6)->toString() . '@tcm.com';
-            $user = new User( $unique_email);
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
-
-
+       
+        $user = new User( 'user@tcm.com');
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
             for ($j = 0; $j < 5; $j++) 
             {
                 $transaction = new Transaction();
@@ -52,13 +49,12 @@ class UserFixtures extends Fixture
                 $transaction->setPaymentLabel(ByteString::fromRandom(8, implode('', range('A', 'Z')))->toString());
                 $transaction->setLocation($transaction->getLocations()[rand(0,9)]);
                 $transaction->setCreatedAt(new \DateTime());
-                $transaction->setCreatedBy($user);
+                $transaction->setUser($user);
                 $manager->persist($transaction);
+                $user->addTransaction($transaction);
             }
-
-
-            $manager->persist($user);
-        }
+        $manager->persist($user);
+        
         $manager->flush();
     }
 
