@@ -32,7 +32,6 @@ class UserFixtures extends Fixture
                 $transaction = new Transaction();
                 $transaction->setAmount(rand(1000, 10000));
                 $transaction->setPaymentLabel(ByteString::fromRandom(8, implode('', range('A', 'Z')))->toString());
-                $transaction->setLocation($transaction->getLocations()[rand(0,9)]);
                 $transaction->setCreatedAt(new \DateTime());
                 $transaction->setUser($admin);
                 $manager->persist($transaction);
@@ -47,7 +46,6 @@ class UserFixtures extends Fixture
                 $transaction = new Transaction();
                 $transaction->setAmount(rand(1000, 10000));
                 $transaction->setPaymentLabel(ByteString::fromRandom(8, implode('', range('A', 'Z')))->toString());
-                $transaction->setLocation($transaction->getLocations()[rand(0,9)]);
                 $transaction->setCreatedAt(new \DateTime());
                 $transaction->setUser($user);
                 $manager->persist($transaction);

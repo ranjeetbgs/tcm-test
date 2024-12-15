@@ -23,12 +23,15 @@ class Transaction implements \JsonSerializable
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:true)]
     private ?string $location = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255, nullable:true)]
+    private ?string $lat_long = null;
 
     public function getId(): ?int
     {
@@ -89,28 +92,12 @@ class Transaction implements \JsonSerializable
         return [
             'id' => $this->getId(),
             'payment_label' => $this->getPaymentLabel(),
-            'amount' => $this->getAmount(),
+            'amount' => number_format($this->getAmount(),0).' €',
             'location'=>$this->getLocation(),
-            'created_at'=>$this->getCreatedAt()
+            'created_at'=>date_format($this->getCreatedAt(),"d/m/Y H:i")
         ];
     }
 
-    public function getLocations()
-    {
-        return array(
-            "48.8666645,2.3159525",
-            "48.8666645,2.3159525",
-            "48.8694753,2.3104226",
-            "48.8685859,2.2928473",
-            "48.864118,2.3442282",
-            "48.8593442,2.3392999",
-            "48.8557324,2.3822849",
-            "48.8450602,2.3340677",
-            "48.8463339,2.3297925",
-            "48.8821775,2.3166563"
-
-        );
-    }
 
     public function getUser(): ?User
     {
@@ -120,6 +107,18 @@ class Transaction implements \JsonSerializable
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getLatLong(): ?string
+    {
+        return $this->lat_long;
+    }
+
+    public function setLatLong(string $lat_long): static
+    {
+        $this->lat_long = $lat_long;
 
         return $this;
     }
