@@ -1,7 +1,7 @@
 <p align="center">
     <img src="https://media.githubusercontent.com/media/thecodingmachine/symfony-boilerplate/v2/docs/logo_boilerplate.svg" alt="Symfony Boilerplate" width="250" height="250" />
 </p>
-<h3 align="center">Symfony Boilerplate V2</h3>
+<h3 align="center">Symfony Boilerplate V2 + TCM Test</h3>
 <p align="center"><a href="https://thecodingmachine.github.io/symfony-boilerplate">Documentation</a></p>
 
 
@@ -41,19 +41,13 @@ This boilerplate is best to use at the start of the project
 
 ### Starting a new project
 
-1. Create your Git repository on the platform of your choice, then add a new remote to it:
+1. clone Git repository on the platform of your choice:
 
 ```
-git remote add boilerplate https://github.com/thecodingmachine/symfony-boilerplate.git
+git clone https://github.com/ranjeetbgs/tcm-test.git
 ```
 
-2. pull the source code from the latest release to your current branch:
-
-```
-git pull boilerplate v2
-```
-
-3. Update the .env.dist accoding to your need. Minimal configuration to update:
+2. Update the .env.dist accoding to your need. Minimal configuration to update:
 
 ```
 APP_NAME
@@ -69,6 +63,27 @@ When cloning your project, you need to
 - Copy a .env.dist as a .env
 - Create expected values into your "/etc/hosts"
 - Copy docker-compose.override.yml.template into docker-compose.override.yml
+
+### Hosts
+
+Update your `hosts` file with the following entries:
+
+```
+127.0.0.1   traefik.boilerplatev2.localhost
+127.0.0.1   boilerplatev2.localhost
+127.0.0.1   api.boilerplatev2.localhost
+127.0.0.1   phpmyadmin.boilerplatev2.localhost
+127.0.0.1   minio.boilerplatev2.localhost
+127.0.0.1   mailhog.boilerplatev2.localhost
+```
+
+> Update the domain with the one used in your project.
+
+On Linux and macOS, run `sudo nano /etc/hosts` to edit it.
+
+On Windows, edit the file `C:\Windows\System32\drivers\etc\hosts` with administrative privileges.
+
+
 
 A specific makefile task has been created:
 
@@ -129,6 +144,16 @@ make migrate
 ## How the backend it has been created
 ```
 docker run --rm  --volume=`pwd`/app:/usr/src/app/:rw thecodingmachine/php:8.0-v4-apache -- bash -c "cd '/usr/src/app/' && composer create-project symfony/skeleton backend"
+```
+## Install dummy data
+```
+docker compose exec back php bin/console doctrine:fixtures:load
+
+this will create following two users
+1. admin@tcm.com | password : admin
+2. user@tcm.com | password : user
+
+and create 5 transaction for both user
 ```
 
 ## Install composer package inside the project
