@@ -37,8 +37,13 @@ const items = computed(() => [
   },
   {
     label: t("components.layout.menu.appMenu.users"),
-    icon: "pi pi-fw pi-file",
+    icon: "pi pi-fw pi-users",
     route: "/users",
+  },
+  {
+    label: t("components.layout.menu.appMenu.transactions"),
+    icon: "pi pi-fw pi-file",
+    route: "/transactions",
   },
   {
     label: t("components.layout.menu.appMenu.page1"),

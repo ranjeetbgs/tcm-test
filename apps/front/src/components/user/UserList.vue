@@ -4,7 +4,7 @@
       v-show="usersPending"
       v-t="{ path: 'components.user.list.pending' }"
     ></div>
-    <div v-show="error">{{ error }}}</div>
+    <div v-show="error">{{ error }}</div>
     {{ errorDelete }}
     <table v-if="users">
       <thead>

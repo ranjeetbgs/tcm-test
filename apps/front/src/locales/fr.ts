@@ -37,14 +37,23 @@ export default {
         delete: "Supprimer",
       },
     },
+    transaction:
+    {
+      list:{
+        pending:"Chargement des Transactions",
+        title:"Transactions",
+        getLocation:"Identify the place"
+      }
+    },
     layout: {
       appHeader: {
         welcome: "Bienvenue {username}",
       },
       menu: {
         appMenu: {
-          home: "Home",
+          home: "Maison",
           users: "Utilisateurs",
+          transactions: "Transactions",
           page1: "page1",
           page2: "page2",
           validation: "validation",

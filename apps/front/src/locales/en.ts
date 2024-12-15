@@ -1,3 +1,5 @@
+import { ListFormat } from "typescript"
+
 export default {
   components: {
     form: {
@@ -38,6 +40,14 @@ export default {
         delete: "Delete",
       },
     },
+    transaction:
+    {
+      list:{
+        pending:"Loading Transactions .....",
+        title:"Transactions",
+        getLocation:"Identify the place"
+      }
+    },
     layout: {
       appHeader: {
         welcome: "Welcome {username}",
@@ -46,6 +56,7 @@ export default {
         appMenu: {
           home: "Home",
           users: "Users",
+          transactions: "Transactions",
           page1: "page1",
           page2: "page2",
           validation: "validation",
